@@ -58,20 +58,25 @@ int main(int argc, char** argv)
         pid_t pid = fork();
         if (pid > 0)
         {
+            //Close the socket returned by accept().
             close(cfd);
             continue;
         }
         if (pid == 0)
         {   
+            //Close the socket returned by socket()
             close(sfd);
-            //Print any message showing that a connection is successful.
+            //Print the message "New connection (pid = %i)" with the pid of the child process.
             printf("New connection (pid = %i)\n", getpid());
             //Use the file descriptor of this new socket with your echo() function.
             echo(cfd, cfd);
-            //Close the two sockets.
+            //Close the socket returned by accept().
             close(cfd);
+            //Print the message "Close connection (pid = %i)" with the pid of the child process.
             printf("Close connection (pid = %i)\n", getpid());
+            //Exit the process. Be careful,
             exit(EXIT_SUCCESS);
+            // when the child process ends, it becomes a zombie. You should catch SIGCHLD to solve this
             signal(SIGCHLD, SIG_IGN);
         }
         else
