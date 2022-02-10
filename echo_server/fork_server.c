@@ -41,6 +41,10 @@ int main(int argc, char** argv)
     }
     //Free the linked list.
     freeaddrinfo(result);
+    
+    if (rp == NULL) {               /* No address succeeded */
+        errx(EXIT_FAILURE, "Could not connect\n");
+    }
     //Specify that the socket can be used to accept incoming connections
     if (listen(sfd, 5) == -1)
         err(EXIT_FAILURE, "main: listen()");
